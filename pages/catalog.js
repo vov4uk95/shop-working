@@ -11,7 +11,6 @@ export default function Catalog() {
   return (
     <>
       <Navbar />
-
       <div className="catalog-container">
         <h1>Каталог</h1>
 
@@ -56,17 +55,18 @@ export default function Catalog() {
           display: flex;
           justify-content: center;
           flex-wrap: wrap;
-          margin-bottom: 30px;
           gap: 10px;
+          margin-bottom: 30px;
         }
 
         .filters button {
           padding: 10px 15px;
           border: 1px solid #ccc;
           background-color: #fff;
-          cursor: pointer;
           border-radius: 6px;
+          cursor: pointer;
           transition: all 0.3s ease;
+          font-size: 1rem;
         }
 
         .filters button.active,
@@ -77,37 +77,50 @@ export default function Catalog() {
 
         .products {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-          gap: 20px;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 25px;
         }
 
         .product-card {
           background-color: #fff;
-          border: 1px solid #ddd;
-          border-radius: 10px;
+          border: 1px solid #eee;
+          border-radius: 12px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
           padding: 15px;
           text-align: center;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 16px rgba(0,0,0,0.1);
         }
 
         .product-card img {
           width: 100%;
           height: auto;
-          border-radius: 6px;
+          border-radius: 8px;
+          margin-bottom: 10px;
         }
 
         .product-card h3 {
-          margin: 10px 0;
+          font-size: 1.1rem;
+          margin: 10px 0 5px;
+        }
+
+        .product-card p {
+          color: #666;
+          margin: 0 0 10px;
         }
 
         .product-card button {
           background-color: #333;
           color: #fff;
           border: none;
-          padding: 8px 14px;
+          padding: 10px 16px;
           border-radius: 6px;
           cursor: pointer;
-          margin-top: 10px;
+          font-size: 0.95rem;
         }
 
         .product-card button:hover {
