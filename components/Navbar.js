@@ -43,7 +43,7 @@ export default function Navbar() {
         .menu a {
           margin-left: 25px;
           text-decoration: none;
-          color: #333;
+          color: #111;
           font-size: 1.05rem;
           position: relative;
         }
