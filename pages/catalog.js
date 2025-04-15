@@ -1,37 +1,120 @@
 import { useState } from 'react';
 import { products } from '../utils/products';
+import Navbar from '../components/Navbar';
 
-const categories = ['всички','комплекти','панталони и клинове','рокли','ризи и блузи'];
+const categories = ['всички', 'комплекти', 'панталони и клинове', 'рокли', 'ризи и блузи'];
 
 export default function Catalog() {
   const [selected, setSelected] = useState('всички');
   const filtered = selected === 'всички' ? products : products.filter(p => p.category === selected);
 
   return (
-    <div>
-      <h1>Каталог</h1>
-      <div style={{ marginBottom: '20px' }}>
-        {categories.map(cat => (
-          <button key={cat} onClick={() => setSelected(cat)} style={{
-              marginRight: 10, padding: 10,
-              backgroundColor: selected === cat ? '#333' : '#ccc',
-              color: selected === cat ? '#fff' : '#000'
-            }}>
-            {cat}
-          </button>
-        ))}
+    <>
+      <Navbar />
+
+      <div className="catalog-container">
+        <h1>Каталог</h1>
+
+        <div className="filters">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setSelected(cat)}
+              className={selected === cat ? 'active' : ''}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="products">
+          {filtered.map(product => (
+            <div key={product.id} className="product-card">
+              <img src={product.image} alt={product.name} />
+              <h3>{product.name}</h3>
+              <p>{product.price} лв</p>
+              <button onClick={() => addToCart(product)}>Добави в количката</button>
+            </div>
+          ))}
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
-        {filtered.map(product => (
-          <div key={product.id} style={{ border: '1px solid #ccc', padding: 10, width: 200 }}>
-            <img src={product.image} alt={product.name} style={{ width: '100%' }} />
-            <h3>{product.name}</h3>
-            <p>{product.price} лв</p>
-            <button onClick={() => addToCart(product)}>Добави в количката</button>
-          </div>
-        ))}
-      </div>
-    </div>
+
+      <style jsx>{`
+        .catalog-container {
+          padding: 40px 20px;
+          font-family: 'Playfair Display', serif;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        h1 {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+
+        .filters {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          margin-bottom: 30px;
+          gap: 10px;
+        }
+
+        .filters button {
+          padding: 10px 15px;
+          border: 1px solid #ccc;
+          background-color: #fff;
+          cursor: pointer;
+          border-radius: 6px;
+          transition: all 0.3s ease;
+        }
+
+        .filters button.active,
+        .filters button:hover {
+          background-color: #333;
+          color: #fff;
+        }
+
+        .products {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 20px;
+        }
+
+        .product-card {
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          padding: 15px;
+          text-align: center;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .product-card img {
+          width: 100%;
+          height: auto;
+          border-radius: 6px;
+        }
+
+        .product-card h3 {
+          margin: 10px 0;
+        }
+
+        .product-card button {
+          background-color: #333;
+          color: #fff;
+          border: none;
+          padding: 8px 14px;
+          border-radius: 6px;
+          cursor: pointer;
+          margin-top: 10px;
+        }
+
+        .product-card button:hover {
+          background-color: #555;
+        }
+      `}</style>
+    </>
   );
 }
 
