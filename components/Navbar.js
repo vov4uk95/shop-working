@@ -1,15 +1,31 @@
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <>
       <nav className="navbar">
         <div className="nav-inner">
           <Link href="/" className="logo">Модерна Дама</Link>
-          <div className="menu">
-            <Link href="/catalog">Каталог</Link>
-            <Link href="/cart">Количка</Link>
-            <Link href="/success">Поръчка</Link>
+
+          <button className="burger" onClick={() => setMenuOpen(!menuOpen)}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" width="28" height="28">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
+          <div className={`menu ${menuOpen ? 'open' : ''}`}>
+            <Link href="/catalog">
+              <span className="icon">🛍️</span> Каталог
+            </Link>
+            <Link href="/cart">
+              <span className="icon">🛒</span> Количка
+            </Link>
+            <Link href="/success">
+              <span className="icon">✅</span> Поръчка
+            </Link>
           </div>
         </div>
       </nav>
@@ -36,47 +52,59 @@ export default function Navbar() {
         .logo {
           font-size: 1.8rem;
           font-weight: bold;
-          color: #222;
+          color: #111;
           text-decoration: none;
+        }
+
+        .burger {
+          display: none;
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+
+        .menu {
+          display: flex;
+          gap: 25px;
         }
 
         .menu a {
-          margin-left: 25px;
           text-decoration: none;
-          color: #333;
+          color: #111;
           font-size: 1.05rem;
-          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 6px;
         }
 
-        .menu a::after {
-          content: '';
-          display: block;
-          width: 0%;
-          height: 2px;
-          background: #333;
-          transition: width 0.3s ease;
-          position: absolute;
-          bottom: -4px;
-          left: 0;
-        }
-
-        .menu a:hover::after {
-          width: 100%;
+        .icon {
+          font-size: 1.2rem;
         }
 
         @media (max-width: 768px) {
-          .nav-inner {
-            flex-direction: column;
-            align-items: flex-start;
+          .burger {
+            display: block;
           }
 
           .menu {
-            margin-top: 10px;
+            display: ${'none'};
+            flex-direction: column;
+            width: 100%;
+            background: #fff;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding: 10px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          }
+
+          .menu.open {
+            display: flex;
           }
 
           .menu a {
-            display: block;
-            margin: 8px 0;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
           }
         }
       `}</style>
