@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 
 export default function Success() {
+  const [order, setOrder] = useState(null);
   const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
@@ -20,11 +21,9 @@ export default function Success() {
 
       orders.push(newOrder);
       localStorage.setItem('orders', JSON.stringify(orders));
-      setOrderId(newOrder.id);
       localStorage.removeItem('cart');
-
-      // Підготовка для надсилання на email (в майбутньому):
-      console.log('Поръчка за изпращане:', newOrder);
+      setOrder(newOrder);
+      setOrderId(newOrder.id);
     }
   }, []);
 
@@ -35,6 +34,22 @@ export default function Success() {
         <h1>Благодарим за поръчката!</h1>
         {orderId && <p>Номер на поръчката: <strong>#{orderId}</strong></p>}
         <p>Ще се свържем с вас за потвърждение.</p>
+
+        {order && (
+          <div className="order-details">
+            <h3>Детайли на поръчката:</h3>
+            <ul>
+              {order.items.map((item, index) => (
+                <li key={index}>
+                  {item.name} × {item.quantity} — {item.price} лв
+                </li>
+              ))}
+            </ul>
+            <p><strong>Дата:</strong> {order.date}</p>
+            <p><strong>Имейл:</strong> {order.email}</p>
+          </div>
+        )}
+
         <a href="/catalog" className="back-link">Обратно към магазина</a>
       </div>
 
@@ -70,6 +85,25 @@ export default function Success() {
 
         .back-link:hover {
           background-color: #555;
+        }
+
+        .order-details {
+          margin-top: 30px;
+          text-align: left;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .order-details h3 {
+          margin-bottom: 10px;
+          font-size: 1.2rem;
+          color: #444;
+        }
+
+        .order-details ul {
+          padding-left: 20px;
+          margin-bottom: 10px;
         }
 
         @keyframes fadeIn {
