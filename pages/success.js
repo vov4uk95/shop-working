@@ -8,7 +8,7 @@ export default function Success() {
         <h1>Благодарим Ви за поръчката!</h1>
         <p>Ще се свържем с Вас скоро.</p>
       </div>
-
+      
       <style jsx>{`
         .success-container {
           max-width: 600px;
@@ -30,3 +30,13 @@ export default function Success() {
     </>
   );
 }
+
+useEffect(() => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if (cart.length > 0) {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders.push({ items: cart, date: new Date().toISOString() });
+    localStorage.setItem('orders', JSON.stringify(orders));
+    localStorage.removeItem('cart');
+  }
+}, []);
