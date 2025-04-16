@@ -3,11 +3,11 @@ import { products } from '../utils/products';
 import Navbar from '../components/Navbar';
 
 const categories = ['всички', 'комплекти', 'панталони и клинове', 'рокли', 'ризи и блузи'];
-const [toastMessage, setToastMessage] = useState('');
 
 export default function Catalog() {
   const [selected, setSelected] = useState('всички');
   const [filtered, setFiltered] = useState(products);
+  const [toastMessage, setToastMessage] = useState('');
 
   useEffect(() => {
     const newProducts = selected === 'всички'
@@ -20,7 +20,21 @@ export default function Catalog() {
       setFiltered(newProducts);
     }, 100);
   }, [selected]);
+  
+function addToCart(product) {
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const existing = cart.find(item => item.id === product.id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ ...product, quantity: 1 });
+  }
+  localStorage.setItem('cart', JSON.stringify(cart));
+  setToastMessage('Добавено в количката!');
 
+  setTimeout(() => setToastMessage(''), 2500);
+}
+  
   return (
     <>
       <Navbar />
@@ -160,20 +174,6 @@ export default function Catalog() {
     </>
   );
 }
-
-function addToCart(product) {
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  const existing = cart.find(item => item.id === product.id);
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({ ...product, quantity: 1 });
-  }
-  localStorage.setItem('cart', JSON.stringify(cart));
-  setToastMessage('Добавено в количката!');
-
-  setTimeout(() => setToastMessage(''), 2500);
-}
 function Toast({ message }) {
   return (
     <div className="toast">
@@ -196,7 +196,7 @@ function Toast({ message }) {
           from { opacity: 0; transform: translateY(20px); }
           to   { opacity: 1; transform: translateY(0); }
         }
-
+        {toastMessage && <Toast message={toastMessage} />}
         @keyframes fadeout {
           from { opacity: 1; }
           to   { opacity: 0; }
