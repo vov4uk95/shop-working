@@ -21,7 +21,7 @@ export default function Navbar() {
               <span className="icon">🛍️</span> Каталог
             </Link>
             <Link href="/cart">
-              <span className="icon">🛒</span> Количка
+              <span className="icon cart-icon">🛒</span> Количка
             </Link>
             <Link href="/success">
               <span className="icon">✅</span> Поръчка
@@ -80,7 +80,19 @@ export default function Navbar() {
         .icon {
           font-size: 1.2rem;
         }
+        
+        .cart-icon {
+           animation: bounce 0.4s ease;
+        }
 
+        @keyframes bounce {
+         0%   { transform: scale(1); }
+         25%  { transform: scale(1.2); }
+         50%  { transform: scale(0.9); }
+         75%  { transform: scale(1.05); }
+         100% { transform: scale(1); }
+       }
+       
         @media (max-width: 768px) {
           .burger {
             display: block;
@@ -105,6 +117,7 @@ export default function Navbar() {
           .menu a {
             padding: 10px 0;
             border-bottom: 1px solid #eee;
+            
           }
         }
       `}</style>
