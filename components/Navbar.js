@@ -26,6 +26,9 @@ export default function Navbar() {
             <Link href="/success">
               <span className="icon">✅</span> Поръчка
             </Link>
+            <Link href="/login">
+              <span className="icon">👤</span> Личен кабинет
+            </Link>
           </div>
         </div>
       </nav>
