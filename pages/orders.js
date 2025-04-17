@@ -9,6 +9,13 @@ export default function Orders() {
     setOrders(storedOrders);
   }, []);
 
+  const updateStatus = (index, newStatus) => {
+    const updated = [...orders];
+    updated[index].status = newStatus;
+    setOrders(updated);
+    localStorage.setItem('orders', JSON.stringify(updated));
+  };
+
   return (
     <>
       <Navbar />
@@ -21,20 +28,28 @@ export default function Orders() {
             {orders.map((order, index) => (
               <li key={index} className="order-item">
                 <h3>Поръчка #{index + 1}</h3>
+                <p><strong>Дата:</strong> {order.date}</p>
+                <label>
+                  <strong>Статус:</strong>{' '}
+                  <select
+                    value={order.status}
+                    onChange={(e) => updateStatus(index, e.target.value)}
+                  >
+                    <option value="Обработва се">Обработва се</option>
+                    <option value="Изпратено">Изпратено</option>
+                    <option value="Доставено">Доставено</option>
+                  </select>
+                </label>
                 <ul>
                   {order.items.map((item, i) => (
-                   <li key={index} className="order-item">
-       <h3>Поръчка #{index + 1}</h3>
-       <p><strong>Дата:</strong> {order.date}</p>
-       <p><strong>Статус:</strong> {order.status}</p>
-       <ul>
-  {order.items.map((item, i) => (
-      <li key={i}>
-        {item.name} × {item.quantity} — {item.price} лв
-      </li>
-    ))}
-  </ul>
-</li>
+                    <li key={i}>
+                      {item.name} × {item.quantity} — {item.price} лв
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
 
@@ -76,6 +91,13 @@ export default function Orders() {
 
         .order-item ul {
           padding-left: 20px;
+        }
+
+        select {
+          margin-left: 10px;
+          padding: 4px 8px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
         }
       `}</style>
     </>
