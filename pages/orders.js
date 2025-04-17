@@ -23,14 +23,18 @@ export default function Orders() {
                 <h3>Поръчка #{index + 1}</h3>
                 <ul>
                   {order.items.map((item, i) => (
-                    <li key={i}>
-                      {item.name} × {item.quantity} — {item.price} лв
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
+                   <li key={index} className="order-item">
+       <h3>Поръчка #{index + 1}</h3>
+       <p><strong>Дата:</strong> {order.date}</p>
+       <p><strong>Статус:</strong> {order.status}</p>
+       <ul>
+  {order.items.map((item, i) => (
+      <li key={i}>
+        {item.name} × {item.quantity} — {item.price} лв
+      </li>
+    ))}
+  </ul>
+</li>
         )}
       </div>
 
