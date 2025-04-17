@@ -5,7 +5,8 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
-
+  const [role, setRole] = useState('user');
+  
   useEffect(() => {
     const user = localStorage.getItem('userEmail');
     if (user) setLoggedIn(true);
@@ -16,6 +17,7 @@ export default function Login() {
     if (email && password) {
       localStorage.setItem('userEmail', email);
       setLoggedIn(true);
+      localStorage.setItem('userRole', role);
     }
   };
 
@@ -88,6 +90,14 @@ export default function Login() {
         .welcome button:hover {
           background-color: #555;
         }
+
+        select {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
       `}</style>
     </>
   );
