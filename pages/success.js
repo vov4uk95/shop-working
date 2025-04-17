@@ -6,26 +6,21 @@ export default function Success() {
   const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    import { useEffect } from 'react';
 
-    if (cart.length > 0) {
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
-
-      const newOrder = {
-        id: Date.now(),
-        items: cart,
-        date: new Date().toLocaleString('bg-BG'),
-        status: 'Обработва се',
-        email: localStorage.getItem('userEmail') || ''
-      };
-
-      orders.push(newOrder);
-      localStorage.setItem('orders', JSON.stringify(orders));
-      localStorage.removeItem('cart');
-      setOrder(newOrder);
-      setOrderId(newOrder.id);
-    }
-  }, []);
+useEffect(() => {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if (cart.length > 0) {
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders.push({
+      items: cart,
+      date: new Date().toLocaleString('bg-BG'),
+      status: 'Обработва се',
+    });
+    localStorage.setItem('orders', JSON.stringify(orders));
+    localStorage.removeItem('cart');
+  }
+}, []);
 
   return (
     <>
