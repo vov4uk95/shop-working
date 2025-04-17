@@ -1,15 +1,34 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Navbar from '../components/Navbar';
 
 export default function Orders() {
+  const router = useRouter();
   const [orders, setOrders] = useState([]);
+  const [userEmail, setUserEmail] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
-    setOrders(storedOrders);
+    if (typeof window !== 'undefined') {
+      const email = localStorage.getItem('userEmail');
+      const role = localStorage.getItem('userRole');
+      if (!email) {
+        router.push('/login');
+      } else {
+        setUserEmail(email);
+        setUserRole(role);
+        const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        if (role === 'admin') {
+          setOrders(allOrders); // адмін бачить усі замовлення
+        } else {
+          const userOrders = allOrders.filter(o => o.email === email);
+          setOrders(userOrders);
+        }
+      }
+    }
   }, []);
 
-  const updateStatus = (index, newStatus) => {
+  const handleStatusChange = (index, newStatus) => {
     const updated = [...orders];
     updated[index].status = newStatus;
     setOrders(updated);
@@ -19,85 +38,85 @@ export default function Orders() {
   return (
     <>
       <Navbar />
-      <div className="container">
+      <div className="orders-container">
         <h1>Моите поръчки</h1>
+
         {orders.length === 0 ? (
-          <p className="empty">Нямате направени поръчки.</p>
+          <p>Нямате направени поръчки.</p>
         ) : (
-          <ul className="order-list">
-            {orders.map((order, index) => (
-              <li key={index} className="order-item">
-                <h3>Поръчка #{index + 1}</h3>
-                <p><strong>Дата:</strong> {order.date}</p>
-                <label>
-                  <strong>Статус:</strong>{' '}
+          orders.map((order, index) => (
+            <div className="order-card" key={order.id}>
+              <h3>Поръчка № {order.id}</h3>
+              <p><strong>Имейл:</strong> {order.email}</p>
+              <p><strong>Дата:</strong> {order.date}</p>
+
+              <ul>
+                {order.items.map((item, i) => (
+                  <li key={i}>
+                    {item.name} × {item.quantity} — {item.price} лв
+                  </li>
+                ))}
+              </ul>
+
+              {userRole === 'admin' ? (
+                <div className="status-control">
+                  <label>Статус:</label>
                   <select
                     value={order.status}
-                    onChange={(e) => updateStatus(index, e.target.value)}
+                    onChange={(e) => handleStatusChange(index, e.target.value)}
                   >
-                    <option value="Обработва се">Обработва се</option>
-                    <option value="Изпратено">Изпратено</option>
-                    <option value="Доставено">Доставено</option>
+                    <option>Обработва се</option>
+                    <option>Изпратено</option>
+                    <option>Доставено</option>
+                    <option>Отменено</option>
                   </select>
-                </label>
-                <ul>
-                  {order.items.map((item, i) => (
-                    <li key={i}>
-                      {item.name} × {item.quantity} — {item.price} лв
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
+                </div>
+              ) : (
+                <p><strong>Статус:</strong> {order.status}</p>
+              )}
+            </div>
+          ))
         )}
       </div>
 
       <style jsx>{`
-        .container {
-          max-width: 800px;
+        .orders-container {
+          max-width: 900px;
           margin: 60px auto;
-          padding: 20px;
+          padding: 0 20px;
           font-family: 'Playfair Display', serif;
         }
 
         h1 {
           text-align: center;
-          margin-bottom: 30px;
+          margin-bottom: 40px;
         }
 
-        .empty {
-          text-align: center;
-          color: #666;
-        }
-
-        .order-list {
-          list-style: none;
-          padding: 0;
-        }
-
-        .order-item {
-          border: 1px solid #eee;
-          background: #fdfdfd;
+        .order-card {
+          border: 1px solid #ddd;
           border-radius: 8px;
-          margin-bottom: 20px;
-          padding: 15px;
+          padding: 20px;
+          margin-bottom: 30px;
+          background-color: #fafafa;
         }
 
-        .order-item h3 {
+        .order-card h3 {
           margin-bottom: 10px;
-          color: #333;
         }
 
-        .order-item ul {
+        .order-card ul {
+          margin-top: 10px;
           padding-left: 20px;
         }
 
-        select {
+        .status-control {
+          margin-top: 10px;
+        }
+
+        .status-control select {
           margin-left: 10px;
-          padding: 4px 8px;
+          padding: 6px 12px;
           border-radius: 6px;
-          border: 1px solid #ccc;
         }
       `}</style>
     </>
