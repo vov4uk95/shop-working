@@ -1,103 +1,113 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
+import { useRouter } from 'next/router';
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
   const [role, setRole] = useState('user');
-  
+  const [loggedIn, setLoggedIn] = useState(false);
+
   useEffect(() => {
     const user = localStorage.getItem('userEmail');
-    if (user) setLoggedIn(true);
+    if (user) {
+      setLoggedIn(true);
+    }
   }, []);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (email && password) {
-      localStorage.setItem('userEmail', email);
-      setLoggedIn(true);
-      localStorage.setItem('userRole', role);
+  const handleLogin = () => {
+    if (!email || !password) {
+      alert("Моля, въведете имейл и парола");
+      return;
     }
+
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userRole', role);
+    setLoggedIn(true);
+
+    // опціонально: перенаправляємо на главната страница
+    router.push('/');
   };
 
   const handleLogout = () => {
     localStorage.removeItem('userEmail');
-    setLoggedIn(false);
+    localStorage.removeItem('userRole');
     setEmail('');
     setPassword('');
+    setRole('user');
+    setLoggedIn(false);
   };
 
   return (
     <>
       <Navbar />
-      <div className="container">
-        {loggedIn ? (
-          <div className="welcome">
-            <h2>Здравей, {localStorage.getItem('userEmail')}!</h2>
-            <button onClick={handleLogout}>Изход</button>
-          </div>
-        ) : (
-          <form onSubmit={handleLogin} className="form">
-            <h2>Личен кабинет</h2>
+      <div className="login-container">
+        {!loggedIn ? (
+          <>
+            <h1>Вход</h1>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="Имейл"
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
+              onChange={(e) => setEmail(e.target.value)}
             />
             <input
               type="password"
               placeholder="Парола"
               value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <button type="submit">Вход</button>
-          </form>
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="user">Потребител</option>
+              <option value="admin">Администратор</option>
+            </select>
+            <button onClick={handleLogin}>Вход</button>
+          </>
+        ) : (
+          <div className="welcome">
+            <h2>Здравей, {localStorage.getItem('userEmail')}!</h2>
+            <p>Тип акаунт: <strong>{localStorage.getItem('userRole')}</strong></p>
+            <button onClick={handleLogout}>Изход</button>
+          </div>
         )}
       </div>
 
       <style jsx>{`
-        .container {
+        .login-container {
           max-width: 400px;
           margin: 60px auto;
-          font-family: 'Playfair Display', serif;
+          padding: 20px;
           text-align: center;
+          font-family: 'Playfair Display', serif;
         }
 
-        .form input {
+        input, select {
           display: block;
           width: 100%;
           padding: 10px;
-          margin: 12px 0;
-          border: 1px solid #ccc;
+          margin: 10px 0;
+          font-size: 1rem;
           border-radius: 6px;
+          border: 1px solid #ccc;
         }
 
-        .form button,
-        .welcome button {
+        button {
           background-color: #333;
           color: white;
           padding: 10px 20px;
-          border: none;
           border-radius: 6px;
+          border: none;
           cursor: pointer;
         }
 
-        .form button:hover,
-        .welcome button:hover {
+        button:hover {
           background-color: #555;
         }
 
-        select {
-  width: 100%;
-  padding: 10px;
-  margin: 12px 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
+        .welcome {
+          text-align: center;
+        }
       `}</style>
     </>
   );
