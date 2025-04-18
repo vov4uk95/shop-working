@@ -9,8 +9,8 @@ export default async function handler(req, res) {
         payment_method_types: ['card'],
         mode: 'payment',
         line_items: req.body.items,
-        success_url: ${process.env.NEXT_PUBLIC_DOMAIN}/success,
-        cancel_url: ${process.env.NEXT_PUBLIC_DOMAIN}/cart,
+        success_url: '${process.env.NEXT_PUBLIC_DOMAIN}/success',
+        cancel_url: '${process.env.NEXT_PUBLIC_DOMAIN}/cart',
       });
 
       res.status(200).json({ url: session.url });
