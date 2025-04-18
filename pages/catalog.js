@@ -1,4 +1,122 @@
-.catalog-container {
+import { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
+import { getProducts } from '../utils/products';
+
+const categories = ['всички', 'комплекти', 'панталони и клинове', 'рокли', 'ризи и блузи', 'връхни дрехи'];
+
+export default function Catalog() {
+  const [products, setProducts] = useState([]);
+  const [filtered, setFiltered] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(6);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [selected, setSelected] = useState('всички');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('none');
+  const [toastMessage, setToastMessage] = useState('');
+
+  useEffect(() => {
+    setProducts(getProducts());
+  }, []);
+
+  useEffect(() => {
+    const result = products
+      .filter(p => {
+        const inCategory = selected === 'всички' || p.category === selected;
+        const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              p.category.toLowerCase().includes(searchTerm.toLowerCase());
+        return inCategory && matchesSearch;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'asc') return a.price - b.price;
+        if (sortBy === 'desc') return b.price - a.price;
+        return 0;
+      });
+    setFiltered(result);
+  }, [products, selected, searchTerm, sortBy]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 200;
+      if (bottom && visibleCount < filtered.length && !isLoadingMore) {
+        setIsLoadingMore(true);
+        setTimeout(() => {
+          setVisibleCount(prev => prev + 6);
+          setIsLoadingMore(false);
+        }, 600);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [filtered, visibleCount, isLoadingMore]);
+
+  const addToCart = (product) => {
+    if (!product || !product.id) return;
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existing = cart.find(item => item.id === product.id);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    setToastMessage('Добавено в количката!');
+    setTimeout(() => setToastMessage(''), 2500);
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className="catalog-container">
+        <h1>Каталог</h1>
+
+        <div className="filters">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              className={selected === cat ? 'active' : ''}
+              onClick={() => setSelected(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="search-sort">
+          <input
+            type="text"
+            placeholder="Търси продукт..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+            <option value="none">Без сортиране</option>
+            <option value="asc">Най-евтин → най-скъп</option>
+            <option value="desc">Най-скъп → най-евтин</option>
+          </select>
+        </div>
+
+        <div className="products">
+          {filtered.slice(0, visibleCount).map((product, index) => (
+            <div key={product.id} className="product-card zoom-in" style={{ animationDelay: ${index * 100}ms }}>
+              <img src={product.image} alt={product.name} />
+              <h3>{product.name}</h3>
+              <p>{product.price} лв</p>
+              <button onClick={() => addToCart(product)}>Добави в количката</button>
+            </div>
+          ))}
+        </div>
+
+        {isLoadingMore && (
+          <div className="spinner-container">
+            <div className="spinner"></div>
+          </div>
+        )}
+
+        {toastMessage && <Toast message={toastMessage} />}
+      </div>
+
+      <style jsx>{`
+        .catalog-container {
           padding: 50px 20px;
           font-family: 'Playfair Display', serif;
         }
