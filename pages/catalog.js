@@ -97,7 +97,7 @@ export default function Catalog() {
 
         <div className="products">
           {filtered.slice(0, visibleCount).map((product, index) => (
-            <div key={product.id} className="product-card zoom-in" style={{ animationDelay: ${index * 100}ms }}>
+            <div key={product.id} className="product-card zoom-in" style={{ animationDelay: '${index * 100}ms' }}>
               <img src={product.image} alt={product.name} />
               <h3>{product.name}</h3>
               <p>{product.price} лв</p>
