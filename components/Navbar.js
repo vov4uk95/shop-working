@@ -6,11 +6,11 @@ export default function Navbar() {
   const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
-    if {typeof window !== 'undefined' && localStorage.getItem('userRole') === 'admin' && (
-  <Link href="/admin">
-    <span className="icon">⚙️</span> Админ
-  </Link>
-)}
+    if (typeof window !== 'undefined') {
+      setUserEmail(localStorage.getItem('userEmail') || '');
+      setUserRole(localStorage.getItem('userRole') || '');
+    }
+  }, []);
 
   return (
     <header>
