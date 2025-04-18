@@ -10,20 +10,33 @@ export default function Cart() {
   }, []);
 
   const handleCheckout = async () => {
+  try {
     const response = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        items: cart.map(item => ({
+        line_items: cart.map(item => ({
           price_data: {
             currency: 'bgn',
             product_data: { name: item.name },
-            unit_amount: item.price * 100,
+            unit_amount: Math.round(item.price * 100),
           },
           quantity: item.quantity,
         }))
       }),
     });
+
+    const data = await response.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Грешка при обработка на плащане.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Неуспешна връзка със Stripe.");
+  }
+};
 
     const data = await response.json();
     if (data.url) {
