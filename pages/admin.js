@@ -18,15 +18,15 @@ export default function AdminPanel() {
   const categories = ['всички', 'комплекти', 'панталони и клинове', 'рокли', 'ризи и блузи', 'връхни дрехи'];
 
   useEffect(() => {
-    const role = localStorage.getItem('userRole');
-    if (role !== 'admin') {
-      router.replace('/login');
-    } else {
-      const stored = getAllProducts();
-      setProducts(stored);
-    }
-  }, []);
-
+  const role = localStorage.getItem('userRole');
+  if (role !== 'admin') {
+    router.replace('/login'); // або /, якщо хочеш на головну
+  } else {
+    setIsAdmin(true);
+    const stored = JSON.parse(localStorage.getItem('allProducts')) || [];
+    setProducts(stored);
+  }
+}, []);
   const refreshProducts = () => {
     setProducts(getAllProducts());
   };
