@@ -1,46 +1,49 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
+import { useRouter } from 'next/router';
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCart(storedCart);
+    const stored = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(stored);
   }, []);
 
   const handleCheckout = async () => {
-  try {
-    const response = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        line_items: cart.map(item => ({
-          price_data: {
-            currency: 'bgn',
-            product_data: { name: item.name },
-            unit_amount: Math.round(item.price * 100),
-          },
-          quantity: item.quantity,
-        }))
-      }),
-    });
-
-    const data = await response.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert("Грешка при обработка на плащане.");
+    if (cart.length === 0) {
+      alert("Количката е празна.");
+      return;
     }
-  } catch (err) {
-    console.error(err);
-    alert("Неуспешна връзка със Stripe.");
-  }
-};
 
-    const data = await response.json();
-    if (data.url) {
-      window.location.href = data.url;
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          line_items: cart.map(item => ({
+            price_data: {
+              currency: 'bgn',
+              product_data: {
+                name: item.name
+              },
+              unit_amount: Math.round(item.price * 100)
+            },
+            quantity: item.quantity
+          }))
+        })
+      });
+
+      const data = await response.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Грешка при обработка на плащане.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Грешка при свързване със Stripe.");
     }
   };
 
@@ -51,32 +54,29 @@ export default function Cart() {
       <Navbar />
       <div className="cart-container">
         <h1>Количка</h1>
+
         {cart.length === 0 ? (
-          <p className="empty">Количката е празна.</p>
+          <p>Нямате добавени продукти.</p>
         ) : (
           <>
-            <div className="cart-items">
+            <ul>
               {cart.map((item, index) => (
-                <div className="cart-item" key={index}>
-                  <span className="name">{item.name}</span>
-                  <span className="quantity">× {item.quantity}</span>
-                  <span className="price">{item.price} лв</span>
-                </div>
+                <li key={index}>
+                  {item.name} × {item.quantity} — {item.price} лв
+                </li>
               ))}
-            </div>
-            <div className="total">
-              Общо: <strong>{total.toFixed(2)} лв</strong>
-            </div>
-            <button className="checkout-btn" onClick={handleCheckout}>Плати</button>
+            </ul>
+            <p><strong>Общо:</strong> {total.toFixed(2)} лв</p>
+            <button onClick={handleCheckout}>Плати</button>
           </>
         )}
       </div>
 
       <style jsx>{`
         .cart-container {
-          max-width: 800px;
-          margin: 50px auto;
-          padding: 20px;
+          padding: 40px;
+          max-width: 600px;
+          margin: 0 auto;
           font-family: 'Playfair Display', serif;
         }
 
@@ -85,66 +85,28 @@ export default function Cart() {
           margin-bottom: 30px;
         }
 
-        .empty {
-          text-align: center;
-          font-size: 1.2rem;
-          color: #666;
-        }
-
-        .cart-items {
-          display: flex;
-          flex-direction: column;
-          gap: 15px;
+        ul {
+          list-style: none;
+          padding: 0;
           margin-bottom: 20px;
         }
 
-        .cart-item {
-          display: flex;
-          justify-content: space-between;
-          background: #fdfdfd;
-          border: 1px solid #eee;
-          padding: 12px 16px;
-          border-radius: 8px;
-          font-size: 1rem;
+        li {
+          padding: 8px 0;
+          border-bottom: 1px solid #eee;
         }
 
-        .cart-item span {
-          flex: 1;
-        }
-
-        .name {
-          font-weight: 500;
-        }
-
-        .quantity {
-          text-align: center;
-        }
-
-        .price {
-          text-align: right;
-          color: #333;
-        }
-
-        .total {
-          text-align: right;
-          font-size: 1.1rem;
-          margin-bottom: 20px;
-        }
-
-        .checkout-btn {
+        button {
           background-color: #333;
-          color: #fff;
-          border: none;
+          color: white;
           padding: 12px 24px;
+          font-size: 1rem;
+          border: none;
           border-radius: 6px;
           cursor: pointer;
-          font-size: 1rem;
-          display: block;
-          margin: 0 auto;
-          transition: background 0.3s ease;
         }
 
-        .checkout-btn:hover {
+        button:hover {
           background-color: #555;
         }
       `}</style>
