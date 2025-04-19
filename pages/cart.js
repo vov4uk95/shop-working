@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import '../styles/cart.css'; // підключення стилів
 
+
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const router = useRouter();
@@ -82,4 +83,7 @@ export default function Cart() {
       )}
     </div>
   );
+
 }
+
+
