@@ -36,12 +36,24 @@ export default function Cart() {
   const handleCheckout = async () => {
     const res = await fetch('/api/checkout', {
       method: 'POST',
+<<<<<<< HEAD
       headers: { 'Content-Type': 'application/json' },
+=======
+      headers: {
+        'Content-Type': 'application/json'
+      },
+>>>>>>> dcbfebe5476588802849d927c71195f78e2b1d2f
       body: JSON.stringify({
         line_items: cart.map(item => ({
           price_data: {
             currency: 'bgn',
+<<<<<<< HEAD
             product_data: { name: item.name },
+=======
+            product_data: {
+              name: item.name
+            },
+>>>>>>> dcbfebe5476588802849d927c71195f78e2b1d2f
             unit_amount: Math.round(item.price * 100),
           },
           quantity: item.quantity,
@@ -50,7 +62,13 @@ export default function Cart() {
     });
 
     const data = await res.json();
+<<<<<<< HEAD
     if (data.url) window.location.href = data.url;
+=======
+    if (data.url) {
+      window.location.href = data.url;
+    }
+>>>>>>> dcbfebe5476588802849d927c71195f78e2b1d2f
   };
 
   return (
@@ -62,6 +80,7 @@ export default function Cart() {
         <>
           {cart.map(item => (
             <div key={item.id} className="cart-item">
+<<<<<<< HEAD
               <div>
                 <h4>{item.name}</h4>
                 <p>{item.price} лв</p>
@@ -70,6 +89,14 @@ export default function Cart() {
                   <span>{item.quantity}</span>
                   <button onClick={() => updateQuantity(item.id, 1)}>+</button>
                 </div>
+=======
+              <h4>{item.name}</h4>
+              <p>{item.price} лв</p>
+              <div className="quantity-controls">
+                <button onClick={() => updateQuantity(item.id, -1)}>-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+>>>>>>> dcbfebe5476588802849d927c71195f78e2b1d2f
               </div>
               <button onClick={() => removeItem(item.id)}>Премахни</button>
             </div>
@@ -80,4 +107,8 @@ export default function Cart() {
       )}
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dcbfebe5476588802849d927c71195f78e2b1d2f
