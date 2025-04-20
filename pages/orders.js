@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import '../styles/orders.css';
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
