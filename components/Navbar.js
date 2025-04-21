@@ -1,48 +1,40 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 
 export default function Navbar() {
-  const [userEmail, setUserEmail] = useState('');
-  const [userRole, setUserRole] = useState('');
-  const router = useRouter();
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user) {
-        setUserEmail(user.email);
-        setUserRole(user.role);
-      }
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      setUser(storedUser);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    router.push('/');
+    setUser(null);
   };
 
   return (
     <header>
       <nav className="navbar">
         <div className="nav-left">
-          <Link href="/"><span className="icon">🏠</span> Начало</Link>
-          <Link href="/catalog"><span className="icon">🛍</span> Каталог</Link>
-          <Link href="/cart"><span className="icon">🛒</span> Количка</Link>
-
-          <Link href="/login"><span className="icon">👤</span></Link>
-
-          {userRole === 'admin' && (
-            <Link href="/admin"><span className="icon">⚙️</span></Link>
-          )}
+          <Link href="/">🏠 Начало</Link>
+          <Link href="/catalog">🛍 Каталог</Link>
+          <Link href="/cart">🛒 Количка</Link>
         </div>
-
         <div className="nav-right">
-          {userEmail && (
+          {user ? (
             <>
-              <span className="user-info">Здравей, {userEmail}</span>
-              <button onClick={handleLogout} className="logout-btn">Изход</button>
+              {user.role === 'admin' && (
+                <Link href="/admin">⚙️ Админ</Link>
+              )}
+              <Link href="/profile">👤</Link>
+              <button onClick={handleLogout}>Изход</button>
             </>
+          ) : (
+            <Link href="/login">👤</Link>
           )}
         </div>
       </nav>
@@ -68,7 +60,8 @@ export default function Navbar() {
           font-family: 'Playfair Display', serif;
         }
 
-        .nav-left a {
+        .nav-left a,
+        .nav-right a {
           margin-right: 20px;
           text-decoration: none;
           color: #333;
@@ -78,27 +71,21 @@ export default function Navbar() {
           gap: 6px;
         }
 
-        .nav-left a:hover {
+        .nav-left a:hover,
+        .nav-right a:hover {
           color: #000;
         }
 
-        .icon {
-          font-size: 1.1rem;
-        }
-
-        .user-info {
-          font-style: italic;
-          color: #555;
-          font-size: 0.95rem;
-          margin-right: 10px;
-        }
-
-        .logout-btn {
+        .nav-right button {
           background: none;
-          border: 1px solid #ccc;
-          padding: 5px 10px;
+          border: none;
+          color: #333;
+          font-weight: 500;
           cursor: pointer;
-          border-radius: 4px;
+        }
+
+        .nav-right button:hover {
+          color: #000;
         }
 
         @media (max-width: 768px) {
@@ -107,11 +94,14 @@ export default function Navbar() {
             align-items: flex-start;
           }
 
-          .nav-left {
+          .nav-left,
+          .nav-right {
             margin-bottom: 10px;
           }
 
-          .nav-left a {
+          .nav-left a,
+          .nav-right a,
+          .nav-right button {
             margin-right: 12px;
             font-size: 0.95rem;
           }
