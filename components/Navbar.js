@@ -1,24 +1,33 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { FaBars, FaUser, FaShoppingCart, FaSearch } from 'react-icons/fa';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [userRole, setUserRole] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user) {
-        setUserEmail(user.email);
-        setUserRole(user.role);
-      }
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setUserEmail(user.email);
+      setUserRole(user.role);
     }
-  }, []);
+
+    const handleRouteChange = () => {
+      setIsMenuOpen(false); // автоматично закриваємо меню
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [router]);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen(prev => !prev);
   };
 
   return (
@@ -29,13 +38,11 @@ export default function Navbar() {
           <button className="burger" onClick={toggleMenu}>
             <FaBars />
           </button>
-          <Link href="/catalog">Каталог</Link>
-        </div>
-
-        <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
-          <Link href="/">Начало</Link>
-          <Link href="/catalog">Каталог</Link>
-          {userRole === 'admin' && <Link href="/admin">Админ</Link>}
+          <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
+            <Link href="/">Начало</Link>
+            <Link href="/catalog">Каталог</Link>
+            {userRole === 'admin' && <Link href="/admin">Админ</Link>}
+          </div>
         </div>
 
         <div className="right">
@@ -67,14 +74,12 @@ export default function Navbar() {
           align-items: center;
           background: #f8f8f8;
           padding: 10px 20px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
           font-family: 'Playfair Display', serif;
         }
 
         .left {
           display: flex;
           align-items: center;
-          gap: 10px;
         }
 
         .burger {
@@ -82,12 +87,22 @@ export default function Navbar() {
           border: none;
           font-size: 24px;
           cursor: pointer;
+          margin-right: 10px;
         }
 
         .menu {
           display: flex;
           gap: 20px;
-          transition: max-height 0.3s ease-in-out;
+        }
+
+        .menu a {
+          text-decoration: none;
+          color: #333;
+          transition: color 0.3s ease;
+        }
+
+        .menu a:hover {
+          color: #000;
         }
 
         .right {
@@ -96,29 +111,21 @@ export default function Navbar() {
           font-size: 20px;
         }
 
-        .menu a,
-        .left a {
-          text-decoration: none;
-          color: #333;
-          transition: color 0.3s ease;
-        }
-
-        .menu a:hover,
-        .left a:hover {
-          color: #000;
-        }
-
         @media (max-width: 768px) {
           .menu {
-            display: ${isMenuOpen ? 'flex' : 'none'};
+            display: none;
             flex-direction: column;
             position: absolute;
-            top: 60px;
+            top: 100px;
             left: 0;
-            background: #f8f8f8;
             width: 100%;
-            padding: 10px 0;
-            z-index: 999;
+            background: #f8f8f8;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+
+          .menu.open {
+            display: flex;
           }
         }
       `}</style>
