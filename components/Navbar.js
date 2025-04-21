@@ -1,98 +1,124 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { FaUser, FaShoppingCart, FaSearch, FaBars } from 'react-icons/fa';
+import { FaBars, FaUser, FaShoppingCart, FaSearch } from 'react-icons/fa';
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const user = JSON.parse(localStorage.getItem('user'));
-      if (user?.email) {
+      if (user) {
         setUserEmail(user.email);
+        setUserRole(user.role);
       }
     }
   }, []);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <header className="navbar-container">
-      <div className="navbar">
-        <div className="navbar-left">
-          <Link href="/catalog"><FaBars /> Меню</Link>
+    <header>
+      <div className="top-bar">size</div>
+      <nav className="navbar">
+        <div className="left">
+          <button className="burger" onClick={toggleMenu}>
+            <FaBars />
+          </button>
           <Link href="/catalog">Каталог</Link>
         </div>
 
-        <div className="navbar-center">
-          <span className="logo">size</span>
+        <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
+          <Link href="/">Начало</Link>
+          <Link href="/catalog">Каталог</Link>
+          {userRole === 'admin' && <Link href="/admin">Админ</Link>}
         </div>
 
-        <div className="navbar-right">
-          <Link href="/search"><FaSearch /></Link>
-          <Link href="/cart"><FaShoppingCart /></Link>
-          <Link href="/login"><FaUser /></Link>
+        <div className="right">
+          <Link href="/login"><FaUser title="Личен кабинет" /></Link>
+          <Link href="/cart"><FaShoppingCart title="Количка" /></Link>
+          <Link href="/catalog"><FaSearch title="Търси" /></Link>
         </div>
-      </div>
+      </nav>
 
       <style jsx>{`
-        .navbar-container {
+        header {
           position: sticky;
           top: 0;
           z-index: 1000;
-          background: rgba(255, 255, 255, 0.95);
-          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .top-bar {
+          background: #000;
+          color: white;
+          text-align: center;
+          padding: 8px 0;
+          font-size: 20px;
+          font-weight: bold;
         }
 
         .navbar {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 10px 20px;
           display: flex;
-          align-items: center;
           justify-content: space-between;
+          align-items: center;
+          background: #f8f8f8;
+          padding: 10px 20px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          font-family: 'Playfair Display', serif;
         }
 
-        .navbar-left,
-        .navbar-right {
+        .left {
           display: flex;
-          gap: 15px;
           align-items: center;
+          gap: 10px;
         }
 
-        .navbar-left a,
-        .navbar-right a {
+        .burger {
+          background: none;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+        }
+
+        .menu {
           display: flex;
-          align-items: center;
-          color: #333;
-          font-weight: 500;
-          font-size: 1rem;
+          gap: 20px;
+          transition: max-height 0.3s ease-in-out;
+        }
+
+        .right {
+          display: flex;
+          gap: 20px;
+          font-size: 20px;
+        }
+
+        .menu a,
+        .left a {
           text-decoration: none;
-          transition: color 0.3s ease, transform 0.2s ease;
+          color: #333;
+          transition: color 0.3s ease;
         }
 
-        .navbar-left a:hover,
-        .navbar-right a:hover {
+        .menu a:hover,
+        .left a:hover {
           color: #000;
-          transform: scale(1.1);
-        }
-
-        .navbar-center .logo {
-          background: #000;
-          color: #fff;
-          padding: 8px 20px;
-          font-weight: bold;
-          font-size: 1.2rem;
-          border-radius: 4px;
         }
 
         @media (max-width: 768px) {
-          .navbar {
+          .menu {
+            display: ${isMenuOpen ? 'flex' : 'none'};
             flex-direction: column;
-            align-items: stretch;
-          }
-
-          .navbar-center {
-            margin: 10px 0;
-            text-align: center;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            background: #f8f8f8;
+            width: 100%;
+            padding: 10px 0;
+            z-index: 999;
           }
         }
       `}</style>
