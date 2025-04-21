@@ -7,8 +7,9 @@ export default function Navbar() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setUserEmail(localStorage.getItem('userEmail') || '');
-      setUserRole(localStorage.getItem('userRole') || '');
+      const user = JSON.parse(localStorage.getItem('user'));
+      setUserEmail(user?.email || '');
+      setUserRole(user?.role || '');
     }
   }, []);
 
@@ -17,10 +18,12 @@ export default function Navbar() {
       <nav className="navbar">
         <div className="nav-left">
           <Link href="/"><span className="icon">🏠</span> Начало</Link>
-          <Link href="/catalog"><span className="icon">🛍️</span> Каталог</Link>
+          <Link href="/catalog"><span className="icon">🛍</span> Каталог</Link>
           <Link href="/cart"><span className="icon">🛒</span> Количка</Link>
           <Link href="/orders"><span className="icon">📦</span> Моите поръчки</Link>
           <Link href="/login"><span className="icon">👤</span> Личен кабинет</Link>
+          <Link href="/register"><span className="icon">✍️</span> Регистрация</Link>
+
           {userRole === 'admin' && (
             <Link href="/admin"><span className="icon">⚙️</span> Админ</Link>
           )}
