@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
-
+import '../styles/cart.css';
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -51,39 +50,44 @@ export default function Cart() {
     });
 
     const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    }
+    if (data.url) window.location.href = data.url;
   };
 
   return (
     <div className="cart-container">
       <h2>Количка</h2>
+
       {cart.length === 0 ? (
         <p>Вашата количка е празна.</p>
       ) : (
         <>
-          {cart.map(item => (
-            <div key={item.id} className="cart-item">
-              <div>
-                <h4>{item.name}</h4>
-                <p>{item.price} лв</p>
-                <div className="quantity-controls">
-                  <button onClick={() => updateQuantity(item.id, -1)}>-</button>
-                  <span>{item.quantity}</span>
-                  <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+          <div className="cart-items">
+            {cart.map(item => (
+              <div key={item.id} className="cart-item">
+                <img src={item.image || '/no-image.png'} alt={item.name} className="product-image" />
+                <div className="product-details">
+                  <h3>{item.name}</h3>
+                  <p>{item.price} лв</p>
+                  <div className="quantity-controls">
+                    <button onClick={() => updateQuantity(item.id, -1)}>-</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+                  </div>
+                  <button onClick={() => removeItem(item.id)} className="remove-btn">Премахни</button>
                 </div>
-                <button onClick={() => removeItem(item.id)}>Премахни</button>
               </div>
+            ))}
+          </div>
+
+          <div className="cart-summary">
+            <h3>Обща сума: {getTotal().toFixed(2)} лв</h3>
+            <div className="cart-buttons">
+              <button onClick={() => router.push('/')} className="back-btn">Продължи пазаруване</button>
+              <button onClick={handleCheckout} className="checkout-btn">Плати</button>
             </div>
-          ))}
-          <h3>Обща сума: {getTotal().toFixed(2)} лв</h3>
-          <button onClick={handleCheckout}>Плати</button>
+          </div>
         </>
       )}
     </div>
   );
-
 }
-
-
