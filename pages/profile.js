@@ -3,86 +3,53 @@ import { useRouter } from 'next/router';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
-  const [editing, setEditing] = useState(false);
-  const [newName, setNewName] = useState('');
   const [orders, setOrders] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
+    const storedOrders = JSON.parse(localStorage.getItem('orders')) || [];
     if (!storedUser) {
       router.push('/login');
     } else {
       setUser(storedUser);
-      setNewName(storedUser.name || '');
-      const savedOrders = JSON.parse(localStorage.getItem('orders')) || [];
-      const userOrders = savedOrders.filter(order => order.email === storedUser.email);
-      setOrders(userOrders);
+      setOrders(storedOrders.filter(o => o.email === storedUser.email));
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    router.push('/login');
+    router.push('/');
   };
-
-  const handleSave = () => {
-    const updatedUser = { ...user, name: newName };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setUser(updatedUser);
-    setEditing(false);
-  };
-
-  if (!user) return null;
 
   return (
-    <div style={{ padding: '30px', maxWidth: '700px', margin: '0 auto' }}>
-      <h2>Профил</h2>
+    <div style={{ maxWidth: '800px', margin: '60px auto' }}>
+      <h2>Здравей, {user?.name || user?.email}</h2>
+      <button onClick={() => router.push('/')}>Назад към началната</button>
+      <button onClick={handleLogout} style={{ marginLeft: '15px' }}>Изход</button>
 
-      {editing ? (
-        <>
-          <label>Име:</label>
-          <input
-            type="text"
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            style={{ width: '100%', padding: '8px', marginBottom: '10px' }}
-          />
-          <button onClick={handleSave}>Запази</button>{' '}
-          <button onClick={() => setEditing(false)}>Отказ</button>
-        </>
-      ) : (
-        <>
-          <p><strong>Име:</strong> {user.name || '—'}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Роля:</strong> {user.role || 'клиент'}</p>
-          <button onClick={() => setEditing(true)}>Редактирай</button>{' '}
-          <button onClick={handleLogout}>Изход</button>
-        </>
-      )}
-
-      <hr style={{ margin: '30px 0' }} />
-
-      <h3>Моите поръчки</h3>
+      <h3 style={{ marginTop: '30px' }}>История на поръчките</h3>
       {orders.length === 0 ? (
-        <p>Нямате направени поръчки.</p>
+        <p>Няма направени поръчки.</p>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '15px' }}>
           <thead>
             <tr>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>ID</th>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Дата</th>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Статус</th>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Сума</th>
+              <th>Продукт</th>
+              <th>Количество</th>
+              <th>Цена</th>
+              <th>Дата</th>
+              <th>Статус</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, idx) => (
-              <tr key={idx}>
-                <td>{order.id || '—'}</td>
-                <td>{order.date || '—'}</td>
-                <td>{order.status || 'в процес на обработка'}</td>
-                <td>{order.total?.toFixed(2) || '0.00'} лв</td>
+            {orders.map((order, index) => (
+              <tr key={index}>
+                <td>{order.name}</td>
+                <td>{order.quantity}</td>
+                <td>{order.price} лв</td>
+                <td>{order.date}</td>
+                <td>{order.status}</td>
               </tr>
             ))}
           </tbody>

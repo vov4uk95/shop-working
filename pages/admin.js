@@ -16,23 +16,23 @@ export default function AdminPanel() {
   }, []);
 
   const updateStatus = (index, newStatus) => {
-    const updated = [...orders];
-    updated[index].status = newStatus;
-    setOrders(updated);
-    localStorage.setItem('orders', JSON.stringify(updated));
+    const updatedOrders = [...orders];
+    updatedOrders[index].status = newStatus;
+    setOrders(updatedOrders);
+    localStorage.setItem('orders', JSON.stringify(updatedOrders));
   };
 
   const deleteOrder = (index) => {
     if (confirm('Сигурни ли сте, че искате да изтриете тази поръчка?')) {
-      const updated = [...orders];
-      updated.splice(index, 1);
-      setOrders(updated);
-      localStorage.setItem('orders', JSON.stringify(updated));
+      const updatedOrders = [...orders];
+      updatedOrders.splice(index, 1);
+      setOrders(updatedOrders);
+      localStorage.setItem('orders', JSON.stringify(updatedOrders));
     }
   };
 
   return (
-    <div style={{ maxWidth: '900px', margin: '40px auto', padding: '20px' }}>
+    <div style={{ maxWidth: '1000px', margin: '40px auto', padding: '20px' }}>
       <h2>Админ панел — Поръчки</h2>
       {orders.length === 0 ? (
         <p>Няма направени поръчки.</p>
@@ -49,8 +49,8 @@ export default function AdminPanel() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, i) => (
-              <tr key={i}>
+            {orders.map((order, index) => (
+              <tr key={index}>
                 <td style={td}>{order.name}</td>
                 <td style={td}>{order.quantity}</td>
                 <td style={td}>{order.price} лв</td>
@@ -58,7 +58,7 @@ export default function AdminPanel() {
                 <td style={td}>
                   <select
                     value={order.status}
-                    onChange={(e) => updateStatus(i, e.target.value)}
+                    onChange={(e) => updateStatus(index, e.target.value)}
                   >
                     <option value="В процес">В процес</option>
                     <option value="Изпратена">Изпратена</option>
@@ -66,10 +66,7 @@ export default function AdminPanel() {
                   </select>
                 </td>
                 <td style={td}>
-                  <button
-                    onClick={() => deleteOrder(i)}
-                    style={{ color: 'red' }}
-                  >
+                  <button onClick={() => deleteOrder(index)} style={{ color: 'red' }}>
                     Изтрий
                   </button>
                 </td>
@@ -83,13 +80,13 @@ export default function AdminPanel() {
 }
 
 const th = {
-  border: '1px solid #ccc',
-  padding: '10px',
-  background: '#f0f0f0',
+  border: '1px solid #ddd',
+  padding: '12px',
+  background: '#f8f8f8',
   textAlign: 'left',
 };
 
 const td = {
-  border: '1px solid #ccc',
-  padding: '10px',
+  border: '1px solid #ddd',
+  padding: '12px',
 };
