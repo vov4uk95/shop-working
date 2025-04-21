@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import '../styles/cart.css';
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
