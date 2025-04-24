@@ -37,7 +37,9 @@ export default function Navbar() {
         </div>
 
         <div className="nav-center">
-          <Link href="/" className="site-name">size</Link>
+          <Link href="/" className="logo-link">
+            <span className="logo-text">size</span>
+          </Link>
         </div>
 
         <div className="nav-right">
@@ -76,14 +78,17 @@ export default function Navbar() {
           transform: translateX(-50%);
         }
 
-        .site-name {
+        .logo-link {
+          text-decoration: none;
+        }
+
+        .logo-text {
           font-size: 22px;
           font-weight: bold;
           background: #000;
           color: #fff;
           padding: 4px 12px;
           border-radius: 4px;
-          text-decoration: none;
         }
 
         .burger {
