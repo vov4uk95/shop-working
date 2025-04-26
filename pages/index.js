@@ -1,89 +1,82 @@
-import Head from 'next/head';
 import Link from 'next/link';
-import Navbar from '../components/Navbar';
 
 export default function Home() {
   return (
-    <>
-      <Head>
-        <title>Модерна Дама</title>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
-      </Head>
-
-      <Navbar />
-
-      <div className="hero">
-        <div className="overlay">
-          <h1>Добре дошли в Модерна Дама</h1>
-          <p>Стилни визии за жената с вкус.</p>
-          <Link href="/catalog" className="cta-btn">Разгледай колекцията</Link>
-        </div>
+    <div className="home">
+      <div className="welcome-section">
+        <h1>Добре дошли в <span className="highlight">SIZE</span></h1>
+        <p>Открийте най-новата колекция дамски облекла</p>
+        <Link href="/catalog">
+          <button className="explore-button">Разгледай колекцията</button>
+        </Link>
       </div>
 
       <style jsx>{`
-        body {
-          margin: 0;
-          font-family: 'Playfair Display', serif;
-        }
-
-        .hero {
-          background-image: url('https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=1650&q=80');
+        .home {
+          background-image: url('/background.jpg'); /* Фотофон. Додай файл у папку /public */
           background-size: cover;
           background-position: center;
-          height: 90vh;
+          height: calc(100vh - 80px); /* Віднімаємо висоту шапки */
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-
-        .overlay {
-          background: rgba(255, 255, 255, 0.88);
-          padding: 40px;
           text-align: center;
+          padding: 20px;
+        }
+
+        .welcome-section {
+          background: rgba(255, 255, 255, 0.8);
+          padding: 30px;
           border-radius: 12px;
-          max-width: 600px;
         }
 
-        .overlay h1 {
-          font-size: 2.7rem;
-          margin-bottom: 10px;
-          color: #222;
+        .highlight {
+          color: #000;
+          background: #ffd700;
+          padding: 5px 10px;
+          border-radius: 6px;
         }
 
-        .overlay p {
-          font-size: 1.2rem;
+        h1 {
+          font-size: 2.5rem;
           margin-bottom: 20px;
-          color: #444;
+          font-family: 'Playfair Display', serif;
         }
 
-        .cta-btn {
-          background-color: #333;
+        p {
+          font-size: 1.2rem;
+          margin-bottom: 30px;
+        }
+
+        .explore-button {
+          background: #000;
           color: #fff;
-          text-decoration: none;
-          padding: 12px 24px;
-          border-radius: 8px;
-          font-size: 1.1rem;
+          padding: 10px 20px;
+          font-size: 1rem;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
           transition: background 0.3s ease;
         }
 
-        .cta-btn:hover {
-          background-color: #555;
+        .explore-button:hover {
+          background: #333;
         }
 
         @media (max-width: 768px) {
-          .overlay {
-            padding: 20px;
-          }
-
-          .overlay h1 {
+          h1 {
             font-size: 2rem;
           }
 
-          .cta-btn {
+          p {
             font-size: 1rem;
+          }
+
+          .explore-button {
+            padding: 8px 16px;
           }
         }
       `}</style>
-    </>
+    </div>
   );
 }

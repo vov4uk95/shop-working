@@ -1,7 +1,13 @@
-import '../styles/cart.css'; // підключення глобального стилю
-import '../styles/orders.css';
+import Navbar from '../components/Navbar';
+import '../styles/globals.css'; // Якщо є
 import '../styles/cart.css';
+import '../styles/orders.css';
 
 export default function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Navbar />
+      <Component {...pageProps} />
+    </>
+  );
 }
