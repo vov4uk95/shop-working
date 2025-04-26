@@ -1,75 +1,89 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Link from 'next/link';
+import Navbar from '../components/Navbar';
 
 export default function Home() {
-  const [query, setQuery] = useState('');
-  const router = useRouter();
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (query.trim()) {
-      router.push(`/catalog?search=${encodeURIComponent(query)}`);
-    }
-  };
-
   return (
-    <div className="home-container">
-      <div className="search-section">
-        <h1>Добре дошли в size</h1>
-        <form onSubmit={handleSearch} className="search-form">
-          <input
-            type="text"
-            placeholder="Търси продукт..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <button type="submit">Търси</button>
-        </form>
+    <>
+      <Head>
+        <title>Модерна Дама</title>
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap" rel="stylesheet" />
+      </Head>
+
+      <Navbar />
+
+      <div className="hero">
+        <div className="overlay">
+          <h1>Добре дошли в Модерна Дама</h1>
+          <p>Стилни визии за жената с вкус.</p>
+          <Link href="/catalog" className="cta-btn">Разгледай колекцията</Link>
+        </div>
       </div>
 
       <style jsx>{`
-        .home-container {
-          padding: 40px 20px;
-          text-align: center;
+        body {
+          margin: 0;
           font-family: 'Playfair Display', serif;
         }
 
-        .search-section {
-          background: #f4f4f4;
-          padding: 40px 20px;
-          border-radius: 8px;
-          max-width: 600px;
-          margin: 0 auto;
-        }
-
-        .search-form {
-          margin-top: 20px;
+        .hero {
+          background-image: url('https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=1650&q=80');
+          background-size: cover;
+          background-position: center;
+          height: 90vh;
           display: flex;
+          align-items: center;
           justify-content: center;
-          gap: 10px;
         }
 
-        .search-form input {
-          padding: 10px;
-          width: 70%;
-          border: 1px solid #ccc;
-          border-radius: 4px;
+        .overlay {
+          background: rgba(255, 255, 255, 0.88);
+          padding: 40px;
+          text-align: center;
+          border-radius: 12px;
+          max-width: 600px;
         }
 
-        .search-form button {
-          padding: 10px 20px;
-          background-color: #000;
+        .overlay h1 {
+          font-size: 2.7rem;
+          margin-bottom: 10px;
+          color: #222;
+        }
+
+        .overlay p {
+          font-size: 1.2rem;
+          margin-bottom: 20px;
+          color: #444;
+        }
+
+        .cta-btn {
+          background-color: #333;
           color: #fff;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
+          text-decoration: none;
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-size: 1.1rem;
           transition: background 0.3s ease;
         }
 
-        .search-form button:hover {
-          background-color: #333;
+        .cta-btn:hover {
+          background-color: #555;
+        }
+
+        @media (max-width: 768px) {
+          .overlay {
+            padding: 20px;
+          }
+
+          .overlay h1 {
+            font-size: 2rem;
+          }
+
+          .cta-btn {
+            font-size: 1rem;
+          }
         }
       `}</style>
-    </div>
+    </>
   );
 }
