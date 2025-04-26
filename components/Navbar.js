@@ -16,37 +16,32 @@ export default function Navbar() {
       setUserRole(user.role);
     }
 
-    const handleRouteChange = () => {
-      setIsMenuOpen(false); // автоматично закриваємо меню
-    };
-
+    const handleRouteChange = () => setIsMenuOpen(false);
     router.events.on('routeChangeStart', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
+    return () => router.events.off('routeChangeStart', handleRouteChange);
   }, [router]);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(prev => !prev);
-  };
+  const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
   return (
     <header>
-      <div className="top-bar">size</div>
       <nav className="navbar">
-        <div className="left">
+        <div className="nav-left">
           <button className="burger" onClick={toggleMenu}>
             <FaBars />
           </button>
           <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
-            <Link href="/">Начало</Link>
             <Link href="/catalog">Каталог</Link>
             {userRole === 'admin' && <Link href="/admin">Админ</Link>}
           </div>
         </div>
 
-        <div className="right">
-          <Link href="/login"><FaUser title="Личен кабинет" /></Link>
+        <div className="nav-center">
+          <Link href="/" className="site-name">size</Link>
+        </div>
+
+        <div className="nav-right">
+          <Link href="/login"><FaUser title="Профил" /></Link>
           <Link href="/cart"><FaShoppingCart title="Количка" /></Link>
           <Link href="/catalog"><FaSearch title="Търси" /></Link>
         </div>
@@ -59,27 +54,36 @@ export default function Navbar() {
           z-index: 1000;
         }
 
-        .top-bar {
-          background: #000;
-          color: white;
-          text-align: center;
-          padding: 8px 0;
-          font-size: 20px;
-          font-weight: bold;
-        }
-
         .navbar {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background: #f8f8f8;
-          padding: 10px 20px;
+          padding: 12px 20px;
+          background: #f9f9f9;
           font-family: 'Playfair Display', serif;
+          position: relative;
         }
 
-        .left {
+        .nav-left, .nav-right {
           display: flex;
           align-items: center;
+          gap: 20px;
+        }
+
+        .nav-center {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        .site-name {
+          font-size: 22px;
+          font-weight: bold;
+          background: #000;
+          color: #fff;
+          padding: 4px 12px;
+          border-radius: 4px;
+          text-decoration: none;
         }
 
         .burger {
@@ -87,7 +91,6 @@ export default function Navbar() {
           border: none;
           font-size: 24px;
           cursor: pointer;
-          margin-right: 10px;
         }
 
         .menu {
@@ -98,30 +101,35 @@ export default function Navbar() {
         .menu a {
           text-decoration: none;
           color: #333;
-          transition: color 0.3s ease;
+          transition: 0.3s;
         }
 
         .menu a:hover {
           color: #000;
         }
 
-        .right {
-          display: flex;
-          gap: 20px;
-          font-size: 20px;
+        .nav-right a {
+          font-size: 18px;
+          color: #333;
+          transition: 0.3s;
+        }
+
+        .nav-right a:hover {
+          color: #000;
         }
 
         @media (max-width: 768px) {
           .menu {
             display: none;
-            flex-direction: column;
             position: absolute;
-            top: 100px;
+            top: 60px;
             left: 0;
             width: 100%;
-            background: #f8f8f8;
+            background: #fff;
             padding: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
           }
 
           .menu.open {
