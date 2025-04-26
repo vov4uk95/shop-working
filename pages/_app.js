@@ -1,13 +1,9 @@
-import Navbar from '../components/Navbar';
-import '../styles/globals.css'; // Якщо є
-import '../styles/cart.css';
-import '../styles/orders.css';
+import '../styles/globals.css';
 
 export default function MyApp({ Component, pageProps }) {
   return (
-    <>
-      <Navbar />
+    <div className="page-transition">
       <Component {...pageProps} />
-    </>
+    </div>
   );
 }

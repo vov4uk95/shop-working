@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FaBars, FaUser, FaShoppingCart, FaSearch } from 'react-icons/fa';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,8 +38,10 @@ export default function Navbar() {
         </div>
 
         <div className="nav-center">
-          <Link href="/" className="site-name">size</Link>
-        </div>
+  <Link href="/">
+    <Image src="/logo.png" alt="Size Logo" width={100} height={40} />
+  </Link>
+</div>
 
         <div className="nav-right">
           <Link href="/login"><FaUser title="Профил" /></Link>
