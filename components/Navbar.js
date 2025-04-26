@@ -38,10 +38,10 @@ export default function Navbar() {
         </div>
 
         <div className="nav-center">
-  <Link href="/">
-    <Image src="/logo.png" alt="Size Logo" width={100} height={40} />
-  </Link>
-</div>
+          <Link href="/" className="logo-link">
+            <Image src="/logo.png" alt="Size Logo" width={100} height={40} />
+          </Link>
+        </div>
 
         <div className="nav-right">
           <Link href="/login"><FaUser title="Профил" /></Link>
@@ -79,13 +79,7 @@ export default function Navbar() {
           transform: translateX(-50%);
         }
 
-        .site-name {
-          font-size: 22px;
-          font-weight: bold;
-          background: #000;
-          color: #fff;
-          padding: 4px 12px;
-          border-radius: 4px;
+        .logo-link {
           text-decoration: none;
         }
 
