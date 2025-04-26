@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FaBars, FaUser, FaShoppingCart, FaSearch } from 'react-icons/fa';
 
@@ -16,128 +16,116 @@ export default function Navbar() {
       setUserRole(user.role);
     }
 
-    const closeMenu = () => setIsMenuOpen(false);
-    router.events.on('routeChangeStart', closeMenu);
-    return () => router.events.off('routeChangeStart', closeMenu);
+    const handleRouteChange = () => {
+      setIsMenuOpen(false); // автоматично закриваємо меню
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
   }, [router]);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const toggleMenu = () => {
+    setIsMenuOpen(prev => !prev);
+  };
 
   return (
-    <header className="navbar-wrapper">
+    <header>
+      <div className="top-bar">size</div>
       <nav className="navbar">
         <div className="left">
           <button className="burger" onClick={toggleMenu}>
             <FaBars />
           </button>
           <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
+            <Link href="/">Начало</Link>
             <Link href="/catalog">Каталог</Link>
             {userRole === 'admin' && <Link href="/admin">Админ</Link>}
           </div>
         </div>
 
-        <div className="center">
-          <Link href="/" className="logo">size</Link>
-        </div>
-
         <div className="right">
-          <Link href="/login"><FaUser title="Профил" /></Link>
+          <Link href="/login"><FaUser title="Личен кабинет" /></Link>
           <Link href="/cart"><FaShoppingCart title="Количка" /></Link>
           <Link href="/catalog"><FaSearch title="Търси" /></Link>
         </div>
       </nav>
 
       <style jsx>{`
-        .navbar-wrapper {
+        header {
           position: sticky;
           top: 0;
           z-index: 1000;
-          background: #f8f8f8;
-          border-bottom: 1px solid #ddd;
+        }
+
+        .top-bar {
+          background: #000;
+          color: white;
+          text-align: center;
+          padding: 8px 0;
+          font-size: 20px;
+          font-weight: bold;
         }
 
         .navbar {
           display: flex;
-          align-items: center;
           justify-content: space-between;
-          max-width: 1200px;
-          margin: 0 auto;
+          align-items: center;
+          background: #f8f8f8;
           padding: 10px 20px;
           font-family: 'Playfair Display', serif;
         }
 
-        .left, .right {
+        .left {
           display: flex;
           align-items: center;
-          gap: 20px;
         }
 
         .burger {
-          font-size: 22px;
           background: none;
           border: none;
+          font-size: 24px;
           cursor: pointer;
+          margin-right: 10px;
         }
 
         .menu {
-          display: none;
-        }
-
-        .menu.open {
           display: flex;
-          flex-direction: column;
-          position: absolute;
-          top: 60px;
-          left: 0;
-          width: 100%;
-          background: #fff;
-          padding: 10px 20px;
+          gap: 20px;
         }
 
         .menu a {
           text-decoration: none;
           color: #333;
-          padding: 8px 0;
+          transition: color 0.3s ease;
         }
 
         .menu a:hover {
           color: #000;
         }
 
-        .center {
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-
-        .logo {
-          font-size: 24px;
-          font-weight: bold;
-          color: #000;
-          text-decoration: none;
-          background: #000;
-          color: #fff;
-          padding: 5px 12px;
-          border-radius: 4px;
-        }
-
-        .right a {
-          font-size: 18px;
-          color: #333;
-        }
-
-        .right a:hover {
-          color: #000;
+        .right {
+          display: flex;
+          gap: 20px;
+          font-size: 20px;
         }
 
         @media (max-width: 768px) {
-          .right {
-            gap: 14px;
+          .menu {
+            display: none;
+            flex-direction: column;
+            position: absolute;
+            top: 100px;
+            left: 0;
+            width: 100%;
+            background: #f8f8f8;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           }
 
-          .center .logo {
-            font-size: 20px;
-            padding: 4px 10px;
+          .menu.open {
+            display: flex;
           }
         }
       `}</style>
