@@ -1,0 +1,32 @@
+[
+    {
+      "id": 1,
+      "name": "Елегантна рокля",
+      "price": 49.99,
+      "image": "/products/dress1.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Стилен топ",
+      "price": 29.99,
+      "image": "/products/top1.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Панталони с висока талия",
+      "price": 39.99,
+      "image": "/products/pants1.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Връхна дреха - палто",
+      "price": 69.99,
+      "image": "/products/coat1.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Комплект топ и пола",
+      "price": 59.99,
+      "image": "/products/set1.jpg"
+    }
+  ]
