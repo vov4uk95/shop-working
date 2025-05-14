@@ -1,72 +1,80 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import products from '../utils/products'; // Імпорт продуктів
 
 export default function Catalog() {
-  const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredProducts, setFilteredProducts] = useState(products);
+  const router = useRouter();
+  const { search } = router.query;
 
   useEffect(() => {
-    const mockProducts = [
-      { id: 1, name: 'Рокля червена', price: 89.99, image: '/images/roklya.jpg' },
-      { id: 2, name: 'Комплект лято', price: 109.99, image: '/images/komplekt.jpg' },
-      { id: 3, name: 'Панталон класически', price: 69.99, image: '/images/pantalon.jpg' },
-    ];
-    setProducts(mockProducts);
-  }, []);
-
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    if (search) {
+      const lowerSearch = search.toLowerCase();
+      const filtered = products.filter(product =>
+        product.name.toLowerCase().includes(lowerSearch)
+      );
+      setFilteredProducts(filtered);
+    } else {
+      setFilteredProducts(products);
+    }
+  }, [search]);
 
   return (
     <div className="catalog-container">
       <h1>Каталог</h1>
-      <input
-        type="text"
-        placeholder="Търсене..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="search-input"
-      />
-      <div className="products">
-        {filteredProducts.map(product => (
-          <div className="product-card" key={product.id}>
-            <img src={product.image} alt={product.name} />
-            <h3>{product.name}</h3>
-            <p>{product.price} лв</p>
-          </div>
-        ))}
-      </div>
+      {filteredProducts.length > 0 ? (
+        <div className="product-grid">
+          {filteredProducts.map(product => (
+            <div key={product.id} className="product-card">
+              <img src={product.image} alt={product.name} />
+              <h3>{product.name}</h3>
+              <p>{product.price} лв</p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>Няма намерени продукти.</p>
+      )}
+
       <style jsx>{`
         .catalog-container {
-          padding: 20px;
+          padding: 40px 20px;
+          max-width: 1200px;
+          margin: 0 auto;
         }
-        .search-input {
-          padding: 10px;
-          width: 100%;
-          max-width: 400px;
-          margin-bottom: 20px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-        }
-        .products {
-          display: flex;
-          flex-wrap: wrap;
+
+        .product-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
           gap: 20px;
+          margin-top: 30px;
         }
+
         .product-card {
-          width: 200px;
+          background: #fff;
+          padding: 15px;
           border: 1px solid #eee;
-          padding: 10px;
-          border-radius: 6px;
+          border-radius: 8px;
           text-align: center;
-          transition: 0.3s;
+          transition: transform 0.3s;
         }
+
         .product-card:hover {
           transform: scale(1.03);
         }
-        img {
+
+        .product-card img {
           width: 100%;
-          height: auto;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 4px;
+        }
+
+        h1 {
+          text-align: center;
+          font-size: 28px;
+          margin-bottom: 20px;
+          font-family: 'Playfair Display', serif;
         }
       `}</style>
     </div>

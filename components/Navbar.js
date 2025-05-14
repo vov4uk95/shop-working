@@ -2,11 +2,9 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FaBars, FaUser, FaShoppingCart, FaSearch } from 'react-icons/fa';
-import Image from 'next/image';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userRole, setUserRole] = useState('');
   const router = useRouter();
@@ -26,9 +24,8 @@ export default function Navbar() {
   const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
   const handleSearch = (e) => {
-    if (e.key === 'Enter' && searchQuery.trim() !== '') {
-      router.push(`/catalog?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
+    if (e.key === 'Enter') {
+      router.push(`/catalog?search=${e.target.value}`);
     }
   };
 
@@ -38,17 +35,17 @@ export default function Navbar() {
         <div className="nav-left">
           <button className="burger" onClick={toggleMenu}>
             <FaBars />
+            <span className="menu-label">МЕНЮ</span>
           </button>
-          <span className="menu-text">МЕНЮ</span>
           <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
-            <Link href="/catalog">КАТАЛОГ</Link>
+            <Link href="/catalog">Каталог</Link>
             {userRole === 'admin' && <Link href="/admin">Админ</Link>}
           </div>
         </div>
 
         <div className="nav-center">
           <Link href="/" className="logo-link">
-            <Image src="/logo.png" alt="Size Logo" width={200} height={100} />
+            <span className="logo-text">size</span>
           </Link>
         </div>
 
@@ -57,11 +54,9 @@ export default function Navbar() {
             <FaSearch />
             <input
               type="text"
-              placeholder="Търси..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={handleSearch}
               className="search-input"
+              placeholder="Търси..."
+              onKeyDown={handleSearch}
             />
           </div>
           <Link href="/login"><FaUser title="Профил" /></Link>
@@ -74,7 +69,6 @@ export default function Navbar() {
           position: sticky;
           top: 0;
           z-index: 1000;
-          background: #fff;
         }
 
         .navbar {
@@ -93,20 +87,19 @@ export default function Navbar() {
           gap: 20px;
         }
 
-        .menu-text {
-          margin-left: 8px;
-          font-size: 16px;
-          font-weight: 500;
-        }
-
         .nav-center {
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
         }
 
-        .logo-link {
-          text-decoration: none;
+        .logo-text {
+          font-size: 22px;
+          font-weight: bold;
+          background: #000;
+          color: #fff;
+          padding: 4px 12px;
+          border-radius: 4px;
         }
 
         .burger {
@@ -114,6 +107,13 @@ export default function Navbar() {
           border: none;
           font-size: 24px;
           cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .menu-label {
+          font-size: 14px;
         }
 
         .menu {
@@ -131,33 +131,6 @@ export default function Navbar() {
           color: #000;
         }
 
-        .nav-right {
-          display: flex;
-          align-items: center;
-          gap: 20px;
-        }
-
-        .search-box {
-          display: flex;
-          align-items: center;
-          background: #eee;
-          border-radius: 20px;
-          padding: 5px 10px;
-          gap: 8px;
-        }
-
-        .search-input {
-          border: none;
-          background: transparent;
-          outline: none;
-          font-size: 14px;
-          width: 120px;
-        }
-
-        .search-box:hover {
-          background: #ddd;
-        }
-
         .nav-right a {
           font-size: 18px;
           color: #333;
@@ -168,9 +141,29 @@ export default function Navbar() {
           color: #000;
         }
 
+        .search-box {
+          display: flex;
+          align-items: center;
+          background: #eee;
+          padding: 5px 10px;
+          border-radius: 20px;
+          transition: background 0.3s ease;
+        }
+
+        .search-input {
+          border: none;
+          background: transparent;
+          margin-left: 8px;
+          outline: none;
+          width: 120px;
+        }
+
+        .search-box:hover {
+          background: #ddd;
+        }
+
         @media (max-width: 768px) {
-          .menu {
-            display: none;
+          .menu {display: none;
             position: absolute;
             top: 60px;
             left: 0;

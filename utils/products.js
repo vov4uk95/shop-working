@@ -1,62 +1,46 @@
-// utils/products.js
-
-const initialProducts = [
+const products = [
   {
     id: 1,
-    name: 'Лятна рокля',
-    price: 49,
-    image: 'https://via.placeholder.com/300x400?text=Рокля',
-    category: 'рокли'
+    name: 'Рокля Елеганс',
+    price: 89.99,
+    category: 'рокли',
+    image: '/products/dress1.jpg'
   },
   {
     id: 2,
-    name: 'Черен панталон',
-    price: 35,
-    image: 'https://via.placeholder.com/300x400?text=Панталон',
-    category: 'панталони и клинове'
+    name: 'Панталони Комфорт',
+    price: 59.99,
+    category: 'панталони',
+    image: '/products/pants1.jpg'
   },
   {
     id: 3,
-    name: 'Бяла риза',
-    price: 29,
-    image: 'https://via.placeholder.com/300x400?text=Риза',
-    category: 'ризи и блузи'
+    name: 'Блуза Лято',
+    price: 39.99,
+    category: 'ризи и блузи',
+    image: '/products/blouse1.jpg'
   },
   {
     id: 4,
-    name: 'Кожено яке',
-    price: 89,
-    image: 'https://via.placeholder.com/300x400?text=Връхна+дреха',
-    category: 'връхни дрехи'
+    name: 'Яке Зима',
+    price: 129.99,
+    category: 'връхни дрехи',
+    image: '/products/jacket1.jpg'
   },
   {
     id: 5,
-    name: 'Комплект с пола',
-    price: 59,
-    image: 'https://via.placeholder.com/300x400?text=Комплект',
-    category: 'комплекти'
+    name: 'Риза Класик',
+    price: 49.99,
+    category: 'ризи и блузи',
+    image: '/products/shirt1.jpg'
   },
   {
     id: 6,
-    name: 'Клин с висока талия',
-    price: 25,
-    image: 'https://via.placeholder.com/300x400?text=Клин',
-    category: 'панталони и клинове'
+    name: 'Сет Стил',
+    price: 109.99,
+    category: 'комплекти',
+    image: '/products/set1.jpg'
   }
 ];
 
-// Взима всички продукти (от localStorage или началните)
-export const getProducts = () => {
-  if (typeof window !== 'undefined') {
-    const stored = JSON.parse(localStorage.getItem('allProducts'));
-    return stored && stored.length > 0 ? stored : initialProducts;
-  }
-  return initialProducts;
-};
-
-// Добавя нов продукт
-export const addProduct = (product) => {
-  const products = getProducts();
-  const updated = [...products, product];
-  localStorage.setItem('allProducts', JSON.stringify(updated));
-};
+export default products;
