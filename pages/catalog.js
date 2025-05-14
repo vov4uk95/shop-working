@@ -36,19 +36,19 @@ export default function Catalog() {
       cart.push({ ...product, quantity: 1 });
     }
     localStorage.setItem('cart', JSON.stringify(cart));
-    alert('ÐÐ¾Ð±Ð°Ð²ÐµÐ½Ð¾ Ð² ÐºÐ¾Ð»Ð¸ÑÐºÐ°ÑÐ°!');
+    alert('Добавено в количката!');
   };
 
   return (
     <div className="catalog-container">
-      <h1>ÐÐ°ÑÐ°Ð»Ð¾Ð³</h1>
+      <h1>Каталог</h1>
 
       <div className="filters">
-        <label>Ð¡Ð¾ÑÑÐ¸ÑÐ°Ð¹ Ð¿Ð¾:</label>
+        <label>Сортирай по:</label>
         <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-          <option value="">ÐÐ·Ð±ÐµÑÐ¸</option>
-          <option value="low">Ð¦ÐµÐ½Ð° Ð²ÑÐ·ÑÐ¾Ð´ÑÑÐ°</option>
-          <option value="high">Ð¦ÐµÐ½Ð° Ð½Ð¸Ð·ÑÐ¾Ð´ÑÑÐ°</option>
+          <option value="">Избери</option>
+          <option value="low">Цена възходяща</option>
+          <option value="high">Цена низходяща</option>
         </select>
       </div>
 
@@ -58,13 +58,13 @@ export default function Catalog() {
             <div key={product.id} className="product-card">
               <img src={product.image} alt={product.name} />
               <h3>{product.name}</h3>
-              <p>{product.price} Ð»Ð²</p>
-              <button onClick={() => addToCart(product)}>ÐÐ¾Ð±Ð°Ð²Ð¸ Ð² ÐºÐ¾Ð»Ð¸ÑÐºÐ°ÑÐ°</button>
+              <p>{product.price} лв</p>
+              <button onClick={() => addToCart(product)}>Добави в количката</button>
             </div>
           ))}
         </div>
       ) : (
-        <p>ÐÑÐ¼Ð° Ð½Ð°Ð¼ÐµÑÐµÐ½Ð¸ Ð¿ÑÐ¾Ð´ÑÐºÑÐ¸.</p>
+        <p>Няма намерени продукти.</p>
       )}
 
       <style jsx>{`
